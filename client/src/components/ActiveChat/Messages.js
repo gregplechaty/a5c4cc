@@ -6,7 +6,7 @@ import moment from "moment";
 const Messages = (props) => {
   const { messages, otherUser, userId } = props;
 
-  function orderedMessages(messages) {
+  const orderedMessages = (messages) => {
     messages.sort((a, b) => {
       if (b.createdAt < a.createdAt) {
         return 1;
