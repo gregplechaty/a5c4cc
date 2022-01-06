@@ -20,11 +20,25 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
+  const calcUnreadMessages = (conversation) => {
+    let numOfUnreadMessages = 0;
+    for (let message of conversation.messages) {
+      if (!message.readYN) {
+        numOfUnreadMessages++;
+      }
+    }
+    if (numOfUnreadMessages === 0) {
+      return null;
+    }
+    return numOfUnreadMessages;
+  };
+  
+
 const Chat = (props) => {
   const classes = useStyles();
   const { conversation } = props;
   const { otherUser } = conversation;
-
+  console.log('check here:', calcUnreadMessages(conversation))
   const handleClick = async (conversation) => {
     console.log('CP: handleClick', conversation)
     await props.setActiveChat(conversation.otherUser.username);
@@ -44,7 +58,10 @@ const Chat = (props) => {
         sidebar={true}
       />
       <ChatContent conversation={conversation} />
-      <Chip label='22' color="primary"/>
+      {
+      calcUnreadMessages(conversation) &&
+      <Chip label={calcUnreadMessages(conversation)}  color="primary"/>
+      }
     </Box>
   );
 };
