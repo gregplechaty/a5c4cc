@@ -117,3 +117,30 @@ export const searchUsers = (searchTerm) => async (dispatch) => {
     console.error(error);
   }
 };
+
+export const patchMessageAsRead = (body)  => {
+  console.log('checkpoint: markMessagesAsRead', body)
+  try {
+    const data = patchMessage(body);
+   // dispatch(setNewMessage(data.message));
+    /*
+    if (!body.conversationId) {
+      dispatch(addConversation(body.recipientId, data.message));
+    } else {
+      dispatch(setNewMessage(data.message));
+    }
+    */
+    //sendMessage(data, body); // this is for socket
+    socket.emit("messages-read", {
+      conversationID: body.conversationId,
+    })
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+const patchMessage = async (body) => {
+  console.log('func: patchMessage')
+  const { data } = await axios.get("/api/messages_read");
+  return data;
+};

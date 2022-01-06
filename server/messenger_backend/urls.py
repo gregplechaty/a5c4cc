@@ -18,6 +18,7 @@ from django.urls import path
 
 from messenger_backend.views import api, auth
 
+
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("auth/login", auth.Login.as_view()),
@@ -26,5 +27,6 @@ urlpatterns = [
     path("auth/user", auth.AuthenticatedUser.as_view()),
     path("api/conversations", api.Conversations.as_view()),
     path("api/messages", api.Messages.as_view()),
+    path("api/messages_read", api.MessagesRead.as_view()),
     path("api/users/<str:username>", api.Username.as_view()),
 ]

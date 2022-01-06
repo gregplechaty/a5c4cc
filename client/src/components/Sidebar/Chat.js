@@ -1,8 +1,9 @@
 import React from "react";
-import { Box } from "@material-ui/core";
+import { Box, Chip } from "@material-ui/core";
 import { BadgeAvatar, ChatContent } from "../Sidebar";
 import { makeStyles } from "@material-ui/core/styles";
 import { setActiveChat } from "../../store/activeConversation";
+import { patchMessageAsRead } from "../../store/utils/thunkCreators";
 import { connect } from "react-redux";
 
 const useStyles = makeStyles((theme) => ({
@@ -25,7 +26,13 @@ const Chat = (props) => {
   const { otherUser } = conversation;
 
   const handleClick = async (conversation) => {
+    console.log('CP: handleClick', conversation)
     await props.setActiveChat(conversation.otherUser.username);
+    const reqBody = {
+      conversationId: conversation.id,
+    };
+    //I think this is where to set the new action
+    await patchMessageAsRead(reqBody);
   };
 
   return (
@@ -37,6 +44,7 @@ const Chat = (props) => {
         sidebar={true}
       />
       <ChatContent conversation={conversation} />
+      <Chip label='22' color="primary"/>
     </Box>
   );
 };

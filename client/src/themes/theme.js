@@ -15,7 +15,15 @@ export const theme = createMuiTheme({
       input: {
         fontWeight: "bold"
       }
-    }
+    },
+    MuiChip: {
+      styleOverrides: {
+        colorPrimary: {
+          backgroundColor: '#3F92FF',
+          borderRadius: '80px',
+        },
+      },
+    },
   },
   palette: {
     primary: { main: "#3A8DFF" },
