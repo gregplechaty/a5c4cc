@@ -5,6 +5,7 @@ import {
   addConversation,
   setNewMessage,
   setSearchedUsers,
+  markMessagesAsRead,
 } from "../conversations";
 import { gotUser, setFetchingStatus } from "../user";
 
@@ -118,29 +119,20 @@ export const searchUsers = (searchTerm) => async (dispatch) => {
   }
 };
 
-export const patchMessageAsRead = (body)  => {
-  console.log('checkpoint: markMessagesAsRead', body)
+export const patchMessageAsRead = (body) => async (dispatch) => {
+  console.log('checkpoint F: markMessagesAsRead', body)
   try {
-    const data = patchMessage(body);
-   // dispatch(setNewMessage(data.message));
-    /*
-    if (!body.conversationId) {
-      dispatch(addConversation(body.recipientId, data.message));
-    } else {
-      dispatch(setNewMessage(data.message));
-    }
-    */
-    //sendMessage(data, body); // this is for socket
-    socket.emit("messages-read", {
-      conversationID: body.conversationId,
-    })
+    const data = await patchMessage(body);
+    console.log('checkpoint H: markMessagesAsRead', data, body)
+    dispatch(markMessagesAsRead(data));
+    socket.emit("messages-read", data)
   } catch (error) {
     console.error(error);
   }
 };
 
 const patchMessage = async (body) => {
-  console.log('func: patchMessage')
-  const { data } = await axios.get("/api/messages_read");
+  console.log('axios call: patchMessage')
+  const { data } = await axios.patch("/api/messages_read", body);
   return data;
 };

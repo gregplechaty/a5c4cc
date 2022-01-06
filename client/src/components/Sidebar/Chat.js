@@ -20,10 +20,10 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-  const calcUnreadMessages = (conversation) => {
+  const calcUnreadMessages = (conversation, userID) => {
     let numOfUnreadMessages = 0;
     for (let message of conversation.messages) {
-      if (!message.readYN) {
+      if (!message.readYN && message.senderId !==userID) {
         numOfUnreadMessages++;
       }
     }
@@ -33,20 +33,20 @@ const useStyles = makeStyles((theme) => ({
     return numOfUnreadMessages;
   };
   
-
 const Chat = (props) => {
   const classes = useStyles();
-  const { conversation } = props;
+  const { conversation, user, patchMessageAsRead } = props;
   const { otherUser } = conversation;
-  console.log('check here:', calcUnreadMessages(conversation))
   const handleClick = async (conversation) => {
     console.log('CP: handleClick', conversation)
     await props.setActiveChat(conversation.otherUser.username);
-    const reqBody = {
-      conversationId: conversation.id,
-    };
-    //I think this is where to set the new action
-    await patchMessageAsRead(reqBody);
+    if (calcUnreadMessages(conversation, user.id) > 0) {
+      const reqBody = {
+        conversationId: conversation.id,
+      };
+      patchMessageAsRead(reqBody);
+    }
+    
   };
 
   return (
@@ -59,8 +59,8 @@ const Chat = (props) => {
       />
       <ChatContent conversation={conversation} />
       {
-      calcUnreadMessages(conversation) &&
-      <Chip label={calcUnreadMessages(conversation)}  color="primary"/>
+      calcUnreadMessages(conversation, user.id) &&
+      <Chip label={calcUnreadMessages(conversation, user.id)}  color="primary"/>
       }
     </Box>
   );
@@ -70,6 +70,9 @@ const mapDispatchToProps = (dispatch) => {
   return {
     setActiveChat: (id) => {
       dispatch(setActiveChat(id));
+    },
+    patchMessageAsRead: (reqBody) => {
+      dispatch(patchMessageAsRead(reqBody));
     }
   };
 };
