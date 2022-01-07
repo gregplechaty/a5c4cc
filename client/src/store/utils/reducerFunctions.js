@@ -80,15 +80,15 @@ export const addNewConvoToStore = (state, recipientId, message) => {
 };
 
 export const setMessageAsRead = (state, id) => {
-  console.log('checkpoint j', state, id)
   return state.map((convo) => {
-      const convoCopy = { ...convo };
-      console.log('checkpoint I:', convoCopy, state, id);
-      if (convoCopy.id === id) {
+      if (convo.id === id) {
+        const convoCopy = { ...convo };
         for (let message of convoCopy.messages) {
           message.readYN = true;
         };
+        return convoCopy;
+      } else {
+        return convo;
       };
-      return convoCopy;
   });
 };

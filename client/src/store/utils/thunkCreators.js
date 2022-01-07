@@ -120,11 +120,9 @@ export const searchUsers = (searchTerm) => async (dispatch) => {
 };
 
 export const patchMessageAsRead = (body) => async (dispatch) => {
-  console.log('checkpoint F: markMessagesAsRead', body)
   try {
     const data = await patchMessage(body);
-    console.log('checkpoint H: markMessagesAsRead', data, body)
-    dispatch(markMessagesAsRead(data));
+    await dispatch(markMessagesAsRead(data));
     socket.emit("messages-read", data)
   } catch (error) {
     console.error(error);
@@ -132,7 +130,6 @@ export const patchMessageAsRead = (body) => async (dispatch) => {
 };
 
 const patchMessage = async (body) => {
-  console.log('axios call: patchMessage')
   const { data } = await axios.patch("/api/messages_read", body);
   return data;
 };

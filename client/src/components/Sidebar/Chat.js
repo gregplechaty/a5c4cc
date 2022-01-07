@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react'
 import { Box, Chip } from "@material-ui/core";
 import { BadgeAvatar, ChatContent } from "../Sidebar";
 import { makeStyles } from "@material-ui/core/styles";
@@ -20,6 +20,11 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
+const Chat = (props) => {
+  const classes = useStyles();
+  const { conversation, user } = props;
+  const { otherUser } = conversation;
+
   const calcUnreadMessages = (conversation, userID) => {
     let numOfUnreadMessages = 0;
     for (let message of conversation.messages) {
@@ -32,19 +37,16 @@ const useStyles = makeStyles((theme) => ({
     }
     return numOfUnreadMessages;
   };
-  
-const Chat = (props) => {
-  const classes = useStyles();
-  const { conversation, user, patchMessageAsRead } = props;
-  const { otherUser } = conversation;
+
+  const numOfUnreadMessages = React.useMemo(() => calcUnreadMessages(conversation, user.id), [conversation, user.id]);
+
   const handleClick = async (conversation) => {
-    console.log('CP: handleClick', conversation)
     await props.setActiveChat(conversation.otherUser.username);
-    if (calcUnreadMessages(conversation, user.id) > 0) {
+    if (numOfUnreadMessages) {
       const reqBody = {
         conversationId: conversation.id,
       };
-      patchMessageAsRead(reqBody);
+      props.patchMessageAsRead(reqBody);
     }
     
   };
@@ -58,10 +60,7 @@ const Chat = (props) => {
         sidebar={true}
       />
       <ChatContent conversation={conversation} />
-      {
-      calcUnreadMessages(conversation, user.id) &&
-      <Chip label={calcUnreadMessages(conversation, user.id)}  color="primary"/>
-      }
+      { numOfUnreadMessages && <Chip label={numOfUnreadMessages}  color="primary"/> }
     </Box>
   );
 };

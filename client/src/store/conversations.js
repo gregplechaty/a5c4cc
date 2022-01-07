@@ -103,7 +103,7 @@ const reducer = (state = [], action) => {
       )
       case MARK_MESSAGES_AS_READ: {
         return setMessageAsRead(state, action.conversationId);
-      };
+      }
     default:
       return state;
   }
