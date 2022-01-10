@@ -22,10 +22,10 @@ const useStyles = makeStyles((theme) => ({
 
 const Chat = (props) => {
   const classes = useStyles();
-  const { conversation, user } = props;
+  const { conversation, user, activeConversation } = props;
   const { otherUser } = conversation;
 
-  const calcUnreadMessages = (conversation, userID) => {
+  const calcUnreadMessages = (conversation, userID, activeConversation) => {
     let numOfUnreadMessages = 0;
     for (let message of conversation.messages) {
       if (!message.readYN && message.senderId !==userID) {
@@ -35,10 +35,17 @@ const Chat = (props) => {
     if (numOfUnreadMessages === 0) {
       return null;
     }
+    if (activeConversation && conversation.otherUser.username === activeConversation) {
+      const reqBody = {
+        conversationId: conversation.id,
+      };
+      props.patchMessageAsRead(reqBody);
+      return null;
+    }
     return numOfUnreadMessages;
   };
 
-  const numOfUnreadMessages = React.useMemo(() => calcUnreadMessages(conversation, user.id), [conversation, user.id]);
+  const numOfUnreadMessages = React.useMemo(() => calcUnreadMessages(conversation, user.id, activeConversation), [conversation, user.id]);
 
   const handleClick = async (conversation) => {
     await props.setActiveChat(conversation.otherUser.username);
