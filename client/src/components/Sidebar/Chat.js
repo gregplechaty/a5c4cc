@@ -25,27 +25,7 @@ const Chat = (props) => {
   const { conversation, user, activeConversation } = props;
   const { otherUser } = conversation;
 
-  const calcUnreadMessages = (conversation, userID, activeConversation) => {
-    let numOfUnreadMessages = 0;
-    for (let message of conversation.messages) {
-      if (!message.readYN && message.senderId !==userID) {
-        numOfUnreadMessages++;
-      }
-    }
-    if (numOfUnreadMessages === 0) {
-      return null;
-    }
-    if (activeConversation && conversation.otherUser.username === activeConversation) {
-      const reqBody = {
-        conversationId: conversation.id,
-      };
-      props.patchMessageAsRead(reqBody);
-      return null;
-    }
-    return numOfUnreadMessages;
-  };
-
-  const numOfUnreadMessages = React.useMemo(() => calcUnreadMessages(conversation, user.id, activeConversation), [conversation, user.id]);
+  const numOfUnreadMessages = React.useMemo(() => calcUnreadMessages(conversation, user.id, activeConversation), [conversation, user.id, activeConversation]);
 
   const handleClick = async (conversation) => {
     await props.setActiveChat(conversation.otherUser.username);
@@ -70,6 +50,26 @@ const Chat = (props) => {
       { numOfUnreadMessages && <Chip label={numOfUnreadMessages}  color="primary"/> }
     </Box>
   );
+};
+
+const calcUnreadMessages = (conversation, userID, activeConversation) => {
+  let numOfUnreadMessages = 0;
+  for (let message of conversation.messages) {
+    if (!message.readYN && message.senderId !==userID) {
+      numOfUnreadMessages++;
+    }
+  }
+  if (numOfUnreadMessages === 0) {
+    return null;
+  }
+  if (activeConversation && conversation.otherUser.username === activeConversation) {
+    const reqBody = {
+      conversationId: conversation.id,
+    };
+    patchMessageAsRead(reqBody);
+    return null;
+  }
+  return numOfUnreadMessages;
 };
 
 const mapDispatchToProps = (dispatch) => {
