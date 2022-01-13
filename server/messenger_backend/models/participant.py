@@ -1,14 +1,15 @@
 from django.db import models
+from django.db.models import Q
 
 from . import utils
-from .conversation import Conversation
 from .user import User
+from .conversation import Conversation
 
 
-class Message(utils.CustomModel):
-    text = models.TextField(null=False)
+class Participant(utils.CustomModel):
     user = models.ForeignKey(
-        User, on_delete=models.CASCADE, db_column="userId", related_name="+"
+        User,
+        on_delete=models.CASCADE,
     )
     conversation = models.ForeignKey(
         Conversation,
@@ -17,5 +18,4 @@ class Message(utils.CustomModel):
         related_name="messages",
         related_query_name="message"
     )
-    createdAt = models.DateTimeField(auto_now_add=True, db_index=True)
-    updatedAt = models.DateTimeField(auto_now=True)
+    time_last_read = models.DateTimeField(null=True)
