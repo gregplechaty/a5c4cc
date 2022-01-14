@@ -25,7 +25,7 @@ const Chat = (props) => {
   const { conversation, user, activeConversation } = props;
   const { otherUser } = conversation;
 
-  const numOfUnreadMessages = React.useMemo(() => calcUnreadMessages(conversation, user.id, activeConversation), [conversation, user.id, activeConversation]);
+  const numOfUnreadMessages = React.useMemo(() => calcUnreadMessages(conversation, user.id, activeConversation, props.patchMessageAsRead), [conversation, user.id, activeConversation, props.patchMessageAsRead]);
 
   const handleClick = async (conversation) => {
     await props.setActiveChat(conversation.otherUser.username);
@@ -52,7 +52,7 @@ const Chat = (props) => {
   );
 };
 
-const calcUnreadMessages = (conversation, userID, activeConversation) => {
+const calcUnreadMessages = (conversation, userID, activeConversation, patchMessageAsRead) => {
   let numOfUnreadMessages = 0;
   for (let message of conversation.messages) {
     if (!message.readYN && message.senderId !==userID) {

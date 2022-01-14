@@ -85,14 +85,16 @@ export const addNewConvoToStore = (state, recipientId, message) => {
 
 export const setMessageAsRead = (state, id) => {
   return state.map((convo) => {
-      if (convo.id === id) {
-        const convoCopy = { ...convo };
-        for (let message of convoCopy.messages) {
-          message.readYN = true;
-        };
-        return convoCopy;
-      } else {
-        return convo;
+    if (convo.id === id) {
+      const convoCopy = { ...convo };
+      const messagesCopy = [ ...convo.messages ];
+      for (let message of messagesCopy) {
+        message.readYN = true;
       };
+      convoCopy.messages = messagesCopy;
+      return convoCopy;
+    } else {
+      return convo;
+    };
   });
 };
