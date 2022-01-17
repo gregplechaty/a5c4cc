@@ -1,5 +1,5 @@
 import React from 'react'
-import { Box, Chip } from "@material-ui/core";
+import { Box } from "@material-ui/core";
 import { BadgeAvatar, ChatContent } from "../Sidebar";
 import { makeStyles } from "@material-ui/core/styles";
 import { setActiveChat } from "../../store/activeConversation";
@@ -46,8 +46,7 @@ const Chat = (props) => {
         online={otherUser.online}
         sidebar={true}
       />
-      <ChatContent conversation={conversation} />
-      { numOfUnreadMessages && <Chip label={numOfUnreadMessages}  color="primary"/> }
+      <ChatContent conversation={conversation} numOfUnreadMessages={numOfUnreadMessages} />
     </Box>
   );
 };

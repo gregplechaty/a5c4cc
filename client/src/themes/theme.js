@@ -16,11 +16,10 @@ export const theme = createMuiTheme({
         fontWeight: "bold"
       }
     },
-    MuiChip: {
+    MuiBadge: {
       styleOverrides: {
         colorPrimary: {
           backgroundColor: '#3F92FF',
-          borderRadius: '80px',
         },
       },
     },

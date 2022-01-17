@@ -92,6 +92,7 @@ export const setMessageAsRead = (state, id) => {
         message.readYN = true;
       };
       convoCopy.messages = messagesCopy;
+      convoCopy.latestReadMessageID =  messagesCopy[messagesCopy.length-1].id;
       return convoCopy;
     } else {
       return convo;

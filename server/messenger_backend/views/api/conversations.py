@@ -46,6 +46,13 @@ class Conversations(APIView):
                 recent_message_position = len(convo_dict["messages"])-1
                 convo_dict["latestMessageText"] = convo_dict["messages"][recent_message_position]["text"]
 
+                # set last read message of conversation
+                for message in convo_dict["messages"]:
+                    if not message["readYN"]:
+                        break
+                    elif message["senderId"] == user_id:
+                        convo_dict["latestReadMessageID"] = message["id"]
+                        
                 # set a property "otherUser" so that frontend will have easier access
                 user_fields = ["id", "username", "photoUrl"]
                 if convo.user1 and convo.user1.id != user_id:
