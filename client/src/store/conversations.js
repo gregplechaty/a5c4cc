@@ -73,7 +73,6 @@ export const markMessagesAsRead = (data) => {
   return {
     type: MARK_MESSAGES_AS_READ,
     conversationId: data.conversation_id,
-    senderId: data.sender_id,
   };
 };
 
