@@ -53,7 +53,7 @@ const Chat = (props) => {
 
 const calcUnreadMessages = (conversation, userID, activeConversation, patchMessageAsRead) => {
   let numOfUnreadMessages = 0;
-  for (let message of conversation.messages) {
+  for (const message of conversation.messages) {
     if (!message.readYN && message.senderId !==userID) {
       numOfUnreadMessages++;
     }

@@ -83,16 +83,16 @@ export const addNewConvoToStore = (state, recipientId, message) => {
   });
 };
 
-export const setMessageAsRead = (state, id) => {
+export const setMessageAsRead = (state, conversationId, latestReadMessageIDs) => {
   return state.map((convo) => {
-    if (convo.id === id) {
+    if (convo.id === conversationId) {
       const convoCopy = { ...convo };
       const messagesCopy = [ ...convo.messages ];
-      for (let message of messagesCopy) {
+      for (const message of messagesCopy) {
         message.readYN = true;
       };
       convoCopy.messages = messagesCopy;
-      convoCopy.latestReadMessageID =  messagesCopy[messagesCopy.length-1].id;
+      convoCopy.latestReadMessageIDs =  latestReadMessageIDs;
       return convoCopy;
     } else {
       return convo;

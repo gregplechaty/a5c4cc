@@ -73,6 +73,7 @@ export const markMessagesAsRead = (data) => {
   return {
     type: MARK_MESSAGES_AS_READ,
     conversationId: data.conversation_id,
+    latestReadMessageIDs: data.latestReadMessageIDs,    
   };
 };
 
@@ -101,7 +102,7 @@ const reducer = (state = [], action) => {
         action.payload.newMessage
       )
       case MARK_MESSAGES_AS_READ: {
-        return setMessageAsRead(state, action.conversationId);
+        return setMessageAsRead(state, action.conversationId, action.latestReadMessageIDs);
       }
     default:
       return state;
