@@ -1,8 +1,9 @@
-import React from "react";
+import React from 'react'
 import { Box } from "@material-ui/core";
 import { BadgeAvatar, ChatContent } from "../Sidebar";
 import { makeStyles } from "@material-ui/core/styles";
 import { setActiveChat } from "../../store/activeConversation";
+import { patchMessageAsRead } from "../../store/utils/thunkCreators";
 import { connect } from "react-redux";
 
 const useStyles = makeStyles((theme) => ({
@@ -21,11 +22,20 @@ const useStyles = makeStyles((theme) => ({
 
 const Chat = (props) => {
   const classes = useStyles();
-  const { conversation } = props;
+  const { conversation, user, activeConversation } = props;
   const { otherUser } = conversation;
+
+  const numOfUnreadMessages = React.useMemo(() => calcUnreadMessages(conversation, user.id, activeConversation, props.patchMessageAsRead), [conversation, user.id, activeConversation, props.patchMessageAsRead]);
 
   const handleClick = async (conversation) => {
     await props.setActiveChat(conversation.otherUser.username);
+    if (numOfUnreadMessages) {
+      const reqBody = {
+        conversationId: conversation.id,
+      };
+      props.patchMessageAsRead(reqBody);
+    }
+    
   };
 
   return (
@@ -36,15 +46,38 @@ const Chat = (props) => {
         online={otherUser.online}
         sidebar={true}
       />
-      <ChatContent conversation={conversation} />
+      <ChatContent conversation={conversation} numOfUnreadMessages={numOfUnreadMessages} />
     </Box>
   );
+};
+
+const calcUnreadMessages = (conversation, userID, activeConversation, patchMessageAsRead) => {
+  let numOfUnreadMessages = 0;
+  for (const message of conversation.messages) {
+    if (!message.readYN && message.senderId !==userID) {
+      numOfUnreadMessages++;
+    }
+  }
+  if (numOfUnreadMessages === 0) {
+    return null;
+  }
+  if (activeConversation && conversation.otherUser.username === activeConversation) {
+    const reqBody = {
+      conversationId: conversation.id,
+    };
+    patchMessageAsRead(reqBody);
+    return null;
+  }
+  return numOfUnreadMessages;
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
     setActiveChat: (id) => {
       dispatch(setActiveChat(id));
+    },
+    patchMessageAsRead: (reqBody) => {
+      dispatch(patchMessageAsRead(reqBody));
     }
   };
 };

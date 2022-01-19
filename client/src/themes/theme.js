@@ -15,7 +15,14 @@ export const theme = createMuiTheme({
       input: {
         fontWeight: "bold"
       }
-    }
+    },
+    MuiBadge: {
+      styleOverrides: {
+        colorPrimary: {
+          backgroundColor: '#3F92FF',
+        },
+      },
+    },
   },
   palette: {
     primary: { main: "#3A8DFF" },
